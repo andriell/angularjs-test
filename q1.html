@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.js"></script>
+
+    <script type="text/javascript">
+        function Person(name, $log) {
+            this.eat = function (food) {
+                $log.info(name + " is eating delicious " + food);
+            };
+            this.beHungry = function (reason) {
+                $log.warn(name + " is hungry because: " + reason);
+            }
+        }
+
+        angular
+            .module("q1",[])
+            .config(function() {
+                console.info("config");
+            })
+            .controller("test1", ["$rootScope", "$scope", "$q", function($rootScope, $scope, $q) {
+                $scope.name = "World";
+
+                var pawel = new Person('Pawel', console);
+
+                var pizzaOrderFulfillment = $q.defer();
+                var pizzaDelivered = pizzaOrderFulfillment.promise;
+                pizzaDelivered.then(pawel.eat, pawel.beHungry);
+                pizzaOrderFulfillment.resolve('Margherita');
+                //$rootScope.$digest();
+            }]);
+    </script>
+</head>
+<body ng-app="q1">
+    <div ng-controller="test1">
+        <h1>Hello, {{name}}!</h1>
+    </div>
+</body>
+</html>
